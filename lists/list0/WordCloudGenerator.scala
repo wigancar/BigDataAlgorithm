@@ -55,8 +55,7 @@ def readTxtFile(filename: String): scala.collection.mutable.Map[String, Int] =
   // read stopwords from file
   val stopwords = Source.fromFile("stop_words_english.txt", "utf-8").getLines.toList
   // read file
-  val lines = Source.fromFile(filename, "utf-8").getLines.toList
-  val wordss = Source.fromFile(filename, "utf-8").mkString(" ").split("\\W+").toList
+  val wordss = Source.fromFile(filename, "utf-8").mkString.split("\\W+").toList
   var words: List[String] = List()
   for w <- wordss
     // remove all the punctuation

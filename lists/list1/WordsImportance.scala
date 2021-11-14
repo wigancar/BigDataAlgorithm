@@ -66,14 +66,13 @@ def readTxtFile(filename: String): scala.collection.mutable.Map[String, Int] =
   // read stopwords from file
   val stopwords = Source.fromFile("stop_words_english.txt", "utf-8").getLines.toList
   // read file
-  val lines = Source.fromFile(filename, "utf-8").getLines.toList
-  val wordss = Source.fromFile(filename, "utf-8").mkString(" ").split("\\W+").toList
+  val wordss = Source.fromFile(filename, "utf-8").mkString.split("\\W+").toList
   var words: List[String] = List()
   for w <- wordss
-      // remove all the punctuation
-      // remove stopwords
-      if !stopwords.contains(w.toLowerCase.toString)
-      if w!=""
+    // remove all the punctuation
+    // remove stopwords
+    if !stopwords.contains(w.toLowerCase.toString)
+    if w!=""
   do
     words = words ++ List(w.toLowerCase.toString)
   // create the collection of pairs in a form of (word, count)
