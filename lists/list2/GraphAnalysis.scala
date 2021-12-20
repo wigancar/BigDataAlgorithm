@@ -64,8 +64,10 @@ class MyGraph(filename: String, noChunks: Int=4):
     val noEls: Double = nodes.length/noReducers.toDouble
     var i = 0
     while (i<noReducers) do
-      val f = Future {singleReduce(allForNode.filter((key, value) => nodes.slice((noEls*i).ceil.toInt, (noEls*(i+1)).ceil.toInt).contains(key)))}
+      val inReducer = allForNode.filter(x => nodes.slice((noEls*i).ceil.toInt, (noEls*(i+1)).ceil.toInt).contains(x._1))
+      val f = Future {singleReduce(inReducer)}
       futures = futures.concat(ArrayBuffer(f))
+      i = i + 1
 
     val result = Future.reduceLeft(futures.toList){case (acc, someQty) =>
       acc.concat(someQty)
@@ -78,13 +80,17 @@ class MyGraph(filename: String, noChunks: Int=4):
     for (key, value) <- allForNode do
       var ins = 0
       var outs = 0
-      value.foreach( sum += _(2) )
+      value.foreach( ins += _(1) )
+      value.foreach( outs += _(2) )
+      res = res.concat(ArrayBuffer(Seq(key, ins, outs)))
     res
 
 @main def task1 =
   val g = MyGraph("graph.txt", 4)
   //g.showChunks()
   val res = g.myMap()
-  println(g.mappedValues)
-  println(g.mappedValues.length)
+  //println(g.mappedValues)
+  //println(g.mappedValues.length)
+  val ost_res = g.myReduce(3)
+  println(ost_res)
   
